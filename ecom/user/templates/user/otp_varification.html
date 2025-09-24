@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Otp Verification</title>
+</head>
+<body>
+    {% if messages %}
+        {% for massage in messages %}
+            {{ massage }}
+        {% endfor %}
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <input type="number" name="otp" placeholder="Enter your OTP">
+        <button type="submit">submit</button>
+    </form>
+</body>
+</html>

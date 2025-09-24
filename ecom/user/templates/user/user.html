@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User</title>
+</head>
+<body>
+    {% if messages %}
+        {% for massage in messages %}
+            {{ massage }}
+        {% endfor %}
+    {% endif %}
+    <p>Hello: {{ user }}</p>
+    {% if not user.is_varified %}
+        <p>your number isn't varified</p>
+        <a href="{% url "otp" %}"><button>verify here</button></a>
+    {% else %}
+        <p>update your profile</p>
+        <a href="{% url "update_profile" %}"><button>update profile</button></a>
+    {% endif %}
+</body>
+</html>
