@@ -1,0 +1,19 @@
+<div>
+    <div>
+    {% if messages %}
+        {% for massage in messages %}
+            {{ massage }}
+        {% endfor %}
+    {% endif %}
+    </div>
+
+{% if request.user.is_authenticated %}
+    hello <a href="{% url "user" %}">{{ request.user }}</a>
+    <a href="{% url "logout" %}">logout</a>
+{% else %}
+    <a href="{% url "login" %}">login</a>
+    <a href="{% url "registration" %}">registration</a>
+{% endif %}
+</div>
+
+<h1>django</h1>
