@@ -28,7 +28,7 @@ class CustomUserAdmin(UserAdmin):
 
 class ProfileAdmin(admin.ModelAdmin):
     model = Profile
-    readonly_fields = ["oder_place_time"]
+    readonly_fields = ["user", "oder_place_time"]
 
 
 admin.site.register(CustomUser, CustomUserAdmin)

@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 import datetime
 
@@ -69,6 +69,10 @@ class Profile(models.Model):
         return str(self.user.first_name)
 
 
+@receiver(post_delete, sender=Profile)
+def delete_user_when_profile_deleted(sender, instance, *args, **kwargs):
+    if instance.user:
+        instance.user.delete()
 
 @receiver(post_save, sender=CustomUser)
 def createProfile(sender, instance, created, *args, **kwargs):

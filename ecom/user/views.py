@@ -119,6 +119,9 @@ def otp_varification(request):
 
 @login_required_message
 def update_profile(request):
+    if not request.user.is_varified:
+        messages.warning(request, "you need to verify your number to edit your profile")
+        return redirect("user")
     if request.user.is_superuser:
         logout(request)
         return redirect("update_profile")
