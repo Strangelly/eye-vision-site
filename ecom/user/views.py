@@ -7,6 +7,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.core.cache import cache
 import random
 from .models import CustomUser, Profile
+import re
 
 # Create your views here.
 def login_required_message(view_func):
@@ -19,6 +20,27 @@ def login_required_message(view_func):
     return wrapper
 
 
+def is_pwd_valid(pwd1, pwd2):
+    errors = {}
+    if pwd1 != pwd2:
+        errors["confirm_password"] = "password did not match"
+        return errors
+    if len(pwd1) < 8:
+        errors["password"] = "Password must be at least 8 characters long."
+        return errors
+
+    if not re.search(r"[A-Za-z]", pwd1):
+        errors["password"] = "Password must contain at least one letter."
+
+    if not re.search(r"\d", pwd1):
+        errors["password"] = "Password must contain at least one digit."
+
+    if not re.search(r"[^\w]", pwd1):
+        errors["password"] = "Password must contain at least one symbol."
+    
+    return errors
+
+
 def make_otp(mobile):
     otp = str(random.randint(100000, 999999))
     hased_otp = make_password(otp)
@@ -28,6 +50,10 @@ def make_otp(mobile):
 
 @login_required_message
 def user(request):
+    if "forgot_paa" in request.session:
+        del request.session["forgot_paa"]
+    if "mobile" in request.session:
+        del request.session["mobile"]
     if request.user.is_superuser:
         logout(request)
         return redirect("user")
@@ -37,6 +63,10 @@ def user(request):
 
 
 def login_user(request):
+    if "forgot_paa" in request.session:
+        del request.session["forgot_paa"]
+    if "mobile" in request.session:
+        del request.session["mobile"]
     if request.user.is_authenticated:
         messages.error(request, "already login")
         return redirect("/")
@@ -49,7 +79,7 @@ def login_user(request):
                 return redirect("/")
             login(request, user)
             if not request.GET.get('next'):
-                messages.success(request, "Login successfull" )
+                messages.success(request, "Login successfull")
             next_url = request.GET.get('next') or '/'
             return redirect(next_url)
         else:
@@ -93,6 +123,8 @@ def otp_varification(request):
         otp = request.POST.get("otp")
         hased = cache.get(f"otp:{mobile}")
         if hased and check_password(otp, hased):
+            if request.session.get("forgot_paa"):
+                return redirect("new_password")
             messages.success(request, "verification Successfull")
             user = CustomUser.objects.get(mobile=mobile)
             user.is_varified = True
@@ -135,3 +167,42 @@ def update_profile(request):
             return redirect(next_url)
     form = User_form(instance=profile)
     return render(request, "user/update_profile.html", {"form":form})
+
+
+
+def forgot_password_mobile(request):
+    if request.user.is_authenticated:
+        messages.warning(request, "already login")
+        return redirect("/")
+    if request.method == "POST":
+        mobile = request.POST.get("mobile")
+        user = CustomUser.objects.filter(mobile = mobile)
+        if user:
+            request.session["forgot_paa"] = True
+            request.session["mobile"] = mobile
+            return redirect("otp")
+        else:
+            messages.error(request, "mobile not found")
+    return render(request, "user/fogot_password_mobile.html")
+
+
+def new_password(request):
+    if "forgot_paa" in request.session:
+        if request.method == "POST":
+            pwd1 = request.POST.get("password")
+            pwd2 = request.POST.get("confirm_password")
+            errors = is_pwd_valid(pwd1, pwd2)
+            if not errors:
+                mobile = request.session.get("mobile")
+                user = CustomUser.objects.get(mobile = mobile)
+                user.set_password(pwd1)
+                user.save()
+                del request.session["forgot_paa"]
+                messages.success(request, "password reset succesfull now login")
+                return redirect("login")
+            else:
+                return render(request, "user/new_password.html", {"errors": errors})
+        return render(request, "user/new_password.html")
+    else:
+        messages.warning(request, "unable to access this page now")
+        return redirect("/")
