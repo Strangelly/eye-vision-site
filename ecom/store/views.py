@@ -1,8 +1,11 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import logout
+from django.shortcuts import render
+from .models import Product
+
 
 def home(request):
-    if request.user.is_superuser:
-        logout(request)
-        redirect("/")
-    return render(request, 'home.html', {})
+    products = Product.objects.all()
+    context = {
+        'products': products,
+        'user': request.user,
+    }
+    return render(request, 'home.html', context)

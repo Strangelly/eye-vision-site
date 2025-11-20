@@ -54,9 +54,6 @@ def user(request):
         del request.session["forgot_paa"]
     if "mobile" in request.session:
         del request.session["mobile"]
-    if request.user.is_superuser:
-        logout(request)
-        return redirect("user")
     user = request.user
     return render(request, "user/user.html", {"user": user})
 
@@ -74,9 +71,6 @@ def login_user(request):
         form = AuthenticationForm(request, data = request.POST) 
         if form.is_valid():
             user = form.get_user()
-            if user.is_superuser:
-                messages.error(request, "superuser can`t login here. goto admin page to login as superuser" )
-                return redirect("/")
             login(request, user)
             if not request.GET.get('next'):
                 messages.success(request, "Login successfull")
@@ -154,9 +148,6 @@ def update_profile(request):
     if not request.user.is_varified:
         messages.warning(request, "you need to verify your number to edit your profile")
         return redirect("user")
-    if request.user.is_superuser:
-        logout(request)
-        return redirect("update_profile")
     profile = get_object_or_404(Profile, user__mobile =request.user.mobile)
     if request.method == "POST":
         form = User_form(request.POST, instance=profile)
