@@ -1,0 +1,85 @@
+
+    <div class="bg-blue-500 text-black text-sm py-2 px-6 flex flex-wrap justify-between gap-3 sticky top-0 z-30">
+        <span>Free delivery across the country on orders over $150</span>
+        <span class="hidden lg:flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Carrying heritage since 1964
+        </span>
+    </div>
+
+    <!-- to make only this one sticky = sticky top-0 z-20 -->
+    <header class="shadow-sm bg-white sticky top-[30px] z-20"> 
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between gap-6">
+                <a href="{% url 'home' %}" class="flex items-center gap-3" aria-label="Back to top">
+                    <div class="h-12 w-12 rounded-full shadow-lg overflow-hidden bg-white flex items-center justify-center">
+                        <img src="media/uploads/products/logo.jpg" alt="Vision Eye Wear" class="h-10 w-10 object-contain">
+                    </div>
+                    <div>
+                        <p class="text-xl font-semi-bold text-blue-500">Eye Vision</p>
+                    </div>
+                </a>
+
+                <div class="hidden lg:flex flex-wrap items-center gap-4 text-sm font-medium text-gray-600">
+                    <a href="{% url 'collection' %}" class="hover:text-blue-500 font-semibold">Collections</a>
+                    <a href="#bestsellers" class="hover:text-blue-500 font-semibold">Bestsellers</a>
+                    <a href="#testimonials" class="hover:text-blue-500 font-semibold">Reviews</a>
+                    <a href="#cart" class="inline-flex items-center gap-2 rounded-full border border-blue-500 px-4 py-2 hover:bg-blue-500 hover:text-white transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        Cart
+                    </a>
+                </div>
+
+                <div class="hidden lg:flex items-center gap-4 text-sm">
+                    {% if user.is_authenticated %}
+                        <span>Hello, <a href="{% url 'user' %}" class="font-semibold text-blue-500 hover:underline">{{ user }}</a></span>
+                        <a href="{% url 'logout' %}" class="inline-flex items-center gap-2 rounded-full border border-black px-4 py-2 hover:bg-red-600 hover:text-white transition">
+                            Logout
+                        </a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="text-blue-600 hover:text-black">Log in</a>
+                        <a href="{% url 'registration' %}" class="inline-flex items-center gap-2 rounded-full border border-black px-4 py-2 text-blue-500 hover:bg-blue-500 hover:text-white transition">
+                            Sign In
+                        </a>
+                    {% endif %}
+                </div>
+
+                <button id="mobile-menu-button" class="lg:hidden rounded-full border border-gray-300 p-2 text-gray-700 hover:border-black hover:text-black transition" aria-label="Toggle navigation">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+
+            <div id="mobile-menu" class="mt-4 hidden flex-col gap-6 border-t border-gray-100 pt-4 text-sm text-gray-600 lg:hidden">
+                <div class="flex flex-col gap-3 font-medium">
+                    <a href="{% url 'collection' %}" class="hover:text-black">Collections</a>
+                    <a href="#bestsellers" class="hover:text-black">Bestsellers</a>
+                    <a href="#testimonials" class="hover:text-black">Reviews</a>
+                    <a href="#cart" class="inline-flex items-center justify-center gap-2 rounded-full border border-black px-4 py-2 hover:bg-blue-500 hover:text-white transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        Cart
+                    </a>
+                </div>
+                <div class="flex flex-col gap-3">
+                    {% if user.is_authenticated %}
+                        <span class="text-gray-700">Hello, <a href="{% url 'user' %}" class="font-semibold text-black hover:underline">{{ user }}</a></span>
+                        <a href="{% url 'logout' %}" class="inline-flex items-center justify-center gap-2 rounded-full border border-black px-4 py-2 text-center hover:bg-red-400 hover:text-white transition">
+                            Logout
+                        </a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="text-gray-600 hover:text-black">Log in</a>
+                        <a href="{% url 'registration' %}" class="inline-flex items-center justify-center gap-2 rounded-full border border-black px-4 py-2 hover:bg-black hover:text-white transition">
+                            Sign Up
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+    </header>

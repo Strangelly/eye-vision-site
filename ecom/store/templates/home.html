@@ -1,90 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vision Eye Wear</title>
-    <style>
-        body {
-          font-family: "Space Grotesk", ui-sans-serif, system-ui, -apple-system;
-        }
-      </style>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body id="page-top" class="bg-gradient-to-b from-gray-50 to-white text-gray-900">
-    <div class="bg-black text-white text-sm py-2 px-6 flex flex-wrap justify-between gap-3">
-        <span>Free delivery across the country on orders over $150</span>
-        <span class="hidden lg:flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            Carrying heritage since 1964
-        </span>
-    </div>
+{% extends 'base.html' %}
 
-    <header class="shadow-sm bg-white sticky top-0 z-20">
-        <nav class="container mx-auto px-6 py-4">
-            <div class="flex items-center justify-between gap-6">
-                <a href="#page-top" class="flex items-center gap-3" aria-label="Back to top">
-                    <div class="h-12 w-12 rounded-full shadow-lg overflow-hidden bg-white flex items-center justify-center">
-                        <img src="media/uploads/products/logo.jpg" alt="Vision Eye Wear" class="h-10 w-10 object-contain">
-                    </div>
-                    <div>
-                        <p class="text-xl font-semi-bold text-blue-500">Eye Vision</p>
-                    </div>
-                </a>
-
-                <div class="hidden lg:flex flex-wrap items-center gap-4 text-sm font-medium text-gray-600">
-                    <a href="#collections" class="hover:text-blue-500 font-semibold">Collections</a>
-                    <a href="#bestsellers" class="hover:text-blue-500 font-semibold">Bestsellers</a>
-                    <a href="#story" class="hover:text-blue-500 font-semibold">Story</a>
-                    <a href="#testimonials" class="hover:text-blue-500 font-semibold">Reviews</a>
-                </div>
-
-                <div class="hidden lg:flex items-center gap-4 text-sm">
-                    {% if user.is_authenticated %}
-                        <span>Hello, <a href="{% url 'user' %}" class="font-semibold text-blue-500 hover:underline">{{ user }}</a></span>
-                        <a href="{% url 'logout' %}" class="inline-flex items-center gap-2 rounded-full border border-black px-4 py-2 hover:bg-red-600 hover:text-white transition">
-                            Logout
-                        </a>
-                    {% else %}
-                        <a href="{% url 'login' %}" class="text-blue-600 hover:text-black">Log in</a>
-                        <a href="{% url 'registration' %}" class="inline-flex items-center gap-2 rounded-full border border-black px-4 py-2 text-blue-500 hover:bg-blue-500 hover:text-white transition">
-                            Sign In
-                        </a>
-                    {% endif %}
-                </div>
-
-                <button id="mobile-menu-button" class="lg:hidden rounded-full border border-gray-300 p-2 text-gray-700 hover:border-black hover:text-black transition" aria-label="Toggle navigation">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                </button>
-            </div>
-
-            <div id="mobile-menu" class="mt-4 hidden flex-col gap-6 border-t border-gray-100 pt-4 text-sm text-gray-600 lg:hidden">
-                <div class="flex flex-col gap-3 font-medium">
-                    <a href="#collections" class="hover:text-black">Collections</a>
-                    <a href="#bestsellers" class="hover:text-black">Bestsellers</a>
-                    <a href="#story" class="hover:text-black">Story</a>
-                    <a href="#testimonials" class="hover:text-black">Reviews</a>
-                </div>
-                <div class="flex flex-col gap-3">
-                    {% if user.is_authenticated %}
-                        <span class="text-gray-700">Hello, <a href="{% url 'user' %}" class="font-semibold text-black hover:underline">{{ user }}</a></span>
-                        <a href="{% url 'logout' %}" class="inline-flex items-center justify-center gap-2 rounded-full border border-black px-4 py-2 text-center hover:bg-red-400 hover:text-white transition">
-                            Logout
-                        </a>
-                    {% else %}
-                        <a href="{% url 'login' %}" class="text-gray-600 hover:text-black">Log in</a>
-                        <a href="{% url 'registration' %}" class="inline-flex items-center justify-center gap-2 rounded-full border border-black px-4 py-2 hover:bg-black hover:text-white transition">
-                            Sign Up
-                        </a>
-                    {% endif %}
-                </div>
-            </div>
-        </nav>
-    </header>
+{% block content %}
 
     <main>
         <section class="container mx-auto grid gap-10 px-6 py-16 md:grid-cols-2 items-center">
@@ -118,20 +34,34 @@
                 </div>
             </div>
             <div class="relative">
-                <div class="absolute inset-0 rounded-3xl bg-gradient-to-br from-amber-200 via-white to-amber-100 blur-3xl opacity-60"></div>
-                <!-- <img src="media/uploads/products/main.jpeg" alt="Premium sunglasses" class="relative rounded-3xl w-full shadow-xl"> -->
+                <div class="absolute inset-0 rounded-3xl bg-gradient-to-br from-blue-600 via-white to-blue-400 blur-3xl opacity-100"></div>
+                {% if featured_product %}
+                    <div class="max-w-xl mx-auto">
+                        <img src="{{ featured_product.image.url }}"
+                            alt="{{ featured_product.name }}"
+                            class="relative z-10 w-full h-auto rounded-3xl shadow-xl">
+                    </div>
+                    <div class="absolute z-10 -bottom-6 -right-3 bg-white/90 backdrop-blur-sm rounded-2xl p-5 shadow-lg">
+                        <p class="text-xs uppercase tracking-widest text-gray-500">Featured Frame</p>
+                        <p class="text-lg font-semibold text-black">{{ featured_product.name }}</p>
+                        <p class="text-amber-500 font-medium">${{ featured_product.price }}</p>
+                    </div>
+                {% else %}
                     <div class="max-w-xl mx-auto">
                         <img src="media/uploads/products/main.jpeg"
                             alt="Premium sunglasses"
                             class="relative z-10 w-full h-auto rounded-3xl shadow-xl">
                     </div>
-                <div class="absolute z-10 -bottom-6 -right-3 bg-white/90 backdrop-blur-sm rounded-2xl p-5 shadow-lg">
-                    <p class="text-xs uppercase tracking-widest text-gray-500">Featured Frame</p>
-                    <p class="text-lg font-semibold text-black">Nebula Eclipse</p>
-                    <p class="text-amber-500 font-medium">$259</p>
-                </div>
+                    <div class="absolute z-10 -bottom-6 -right-3 bg-white/90 backdrop-blur-sm rounded-2xl p-5 shadow-lg">
+                        <p class="text-xs uppercase tracking-widest text-gray-500">Featured Frame</p>
+                        <p class="text-lg font-semibold text-black">Nebula Eclipse</p>
+                        <p class="text-amber-500 font-medium">$259</p>
+                    </div>
+                {% endif %}
             </div>
         </section>
+
+    
 
         <section id="collections" class="bg-gray-100 py-16">
             <div class="container mx-auto px-6">
@@ -140,36 +70,32 @@
                         <p class="text-sm uppercase tracking-[0.3em] text-amber-500">Collections</p>
                         <h2 class="text-3xl md:text-4xl font-semibold">Curated edits for every light</h2>
                     </div>
-                    <a href="#" class="text-sm font-semibold text-black hover:underline">View all collections →</a>
+                    <a href="{% url 'collection' %}" class="text-sm font-semibold text-black hover:underline">View all collections →</a>
                 </div>
-                <div class="mt-10 grid gap-6 md:grid-cols-3">
-                    <article class="group relative overflow-hidden rounded-3xl bg-white shadow">
-                        <img src="https://images.unsplash.com/photo-1475180098004-ca77a66827be?auto=format&fit=crop&w=900&q=80" alt="City frames" class="h-80 w-full object-cover transition duration-700 group-hover:scale-105">
-                        <div class="p-6 space-y-2">
-                            <p class="text-sm uppercase tracking-[0.4em] text-amber-500">Urban</p>
-                            <h3 class="text-2xl font-semibold">City Pulse Frames</h3>
-                            <p class="text-gray-600 text-sm">Lightweight acetate with adaptive glare control.</p>
-                        </div>
-                    </article>
-                    <article class="group relative overflow-hidden rounded-3xl bg-white shadow">
-                        <img src="https://images.unsplash.com/photo-1504593811423-6dd665756598?auto=format&fit=crop&w=900&q=80" alt="Outdoor frames" class="h-80 w-full object-cover transition duration-700 group-hover:scale-105">
-                        <div class="p-6 space-y-2">
-                            <p class="text-sm uppercase tracking-[0.4em] text-emerald-500">Trail</p>
-                            <h3 class="text-2xl font-semibold">Solar Quest Series</h3>
-                            <p class="text-gray-600 text-sm">Polarized titanium built for backcountry light.</p>
-                        </div>
-                    </article>
-                    <article class="group relative overflow-hidden rounded-3xl bg-white shadow">
-                        <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=900&q=80" alt="Luxury frames" class="h-80 w-full object-cover transition duration-700 group-hover:scale-105">
-                        <div class="p-6 space-y-2">
-                            <p class="text-sm uppercase tracking-[0.4em] text-indigo-500">Luxe</p>
-                            <h3 class="text-2xl font-semibold">Eclipse Atelier</h3>
-                            <p class="text-gray-600 text-sm">Hand-burnished metals with night-glow finishing.</p>
-                        </div>
-                    </article>
+
+                <div class="mt-10 grid gap-6 md:grid-cols-3 lg:grid-cols-4 overflow-hidden">
+                    {% for product in products|slice:4 %}
+                        <article class="group relative overflow-hidden rounded-3xl bg-white shadow">
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="h-80 w-full object-cover transition duration-700 group-hover:scale-105">
+                            <div class="p-6 space-y-2">
+                                <p class="text-sm uppercase tracking-[0.4em] text-amber-500">{{ product.category }}</p>
+                                <h3 class="text-2xl font-semibold">{{ product.name }}</h3>
+                                {% if product.is_sale %}
+                                    <div class="flex items-center gap-2">
+                                        <s class="text-gray-400 text-sm">${{ product.price }}</s>
+                                        <p class="text-red-500 font-semibold text-sm">${{ product.sale_price }}</p>
+                                    </div>
+                                {% else %}
+                                    <p class="text-blue-600 text-sm">${{ product.price }}</p>
+                                {% endif %}
+                            </div>
+                        </article>
+                    {% endfor %}
                 </div>
             </div>
         </section>
+
+        #bestsellers
 
         <section id="bestsellers" class="container mx-auto px-6 py-16">
             <div class="flex flex-wrap items-end justify-between gap-6">
@@ -178,39 +104,41 @@
                     <h2 class="text-3xl md:text-4xl font-semibold">Loved by visionaries</h2>
                 </div>
                 <div class="flex gap-3">
-                    <button class="h-10 w-10 rounded-full border border-gray-300 text-gray-700 flex items-center justify-center hover:border-black hover:text-black transition">
+                    <button id="bestsellers-prev" class="h-10 w-10 rounded-full border border-gray-300 text-gray-700 flex items-center justify-center hover:border-black hover:text-black transition disabled:opacity-50 disabled:cursor-not-allowed" aria-label="Previous products">
                         ←
                     </button>
-                    <button class="h-10 w-10 rounded-full border border-gray-300 text-gray-700 flex items-center justify-center hover:border-black hover:text-black transition">
+                    <button id="bestsellers-next" class="h-10 w-10 rounded-full border border-gray-300 text-gray-700 flex items-center justify-center hover:border-black hover:text-black transition disabled:opacity-50 disabled:cursor-not-allowed" aria-label="Next products">
                         →
                     </button>
                 </div>
             </div>
-            <div class="mt-10 grid gap-8 md:grid-cols-3">
-                {% for product in products %}
-                    <article class="rounded-3xl border border-gray-100 bg-white shadow-sm hover:shadow-lg transition">
-                        <div class="relative">
-                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="h-64 w-full rounded-t-3xl object-cover">
-                            <span class="absolute top-4 left-4 rounded-full bg-black/80 px-3 py-1 text-xs uppercase tracking-wide text-white">New</span>
-                        </div>
-                        <div class="p-6 space-y-3">
-                            <div class="flex items-center justify-between">
-                                <p class="text-lg font-semibold text-black">{{ product.name }}</p>
-                                <p class="text-amber-500 font-medium">${{ product.price }}</p>
+            <div class="mt-10 relative overflow-hidden">
+                <div id="bestsellers-container" class="flex gap-8 overflow-x-auto snap-x snap-mandatory scrollbar-hide scroll-smooth" style="scrollbar-width: none; -ms-overflow-style: none;">
+                    {% for product in products %}
+                        <article class="flex-shrink-0 w-full md:w-[calc(33.333%-1.33rem)] lg:w-[calc(25%-1.5rem)] rounded-3xl border border-gray-100 bg-white shadow-sm hover:shadow-lg transition snap-start">
+                            <div class="relative">
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="h-64 w-full rounded-t-3xl object-cover">
+                                <span class="absolute top-4 left-4 rounded-full bg-black/80 px-3 py-1 text-xs uppercase tracking-wide text-white">New</span>
                             </div>
-                            <p class="text-sm text-gray-500">{{ product.description|truncatewords:16 }}</p>
-                            <div class="flex items-center justify-between pt-3 text-sm">
-                                <p class="text-gray-600">Polarized UV400</p>
-                                <a href="#" class="font-semibold text-black hover:underline">View</a>
+                            <div class="p-6 space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <p class="text-lg font-semibold text-black">{{ product.name }}</p>
+                                    <p class="text-amber-500 font-medium">${{ product.price }}</p>
+                                </div>
+                                <p class="text-sm text-gray-500">{{ product.category }}</p>
+                                <div class="flex items-center justify-between pt-3 text-sm">
+                                    <p class="text-gray-600">{{product.description}}</p>
+                                    <a href="#" class="font-semibold text-black hover:underline">View</a>
+                                </div>
                             </div>
+                        </article>
+                    {% empty %}
+                        <div class="w-full rounded-3xl border border-dashed border-gray-300 bg-gray-50 p-10 text-center">
+                            <p class="text-lg font-semibold text-gray-600">New drops arriving soon.</p>
+                            <p class="text-sm text-gray-500">Sign up to be notified when our next capsule launches.</p>
                         </div>
-                    </article>
-                {% empty %}
-                    <div class="md:col-span-3 rounded-3xl border border-dashed border-gray-300 bg-gray-50 p-10 text-center">
-                        <p class="text-lg font-semibold text-gray-600">New drops arriving soon.</p>
-                        <p class="text-sm text-gray-500">Sign up to be notified when our next capsule launches.</p>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                </div>
             </div>
         </section>
 
@@ -285,45 +213,7 @@
         </section>
     </main>
 
-    <footer class="bg-gray-950 text-gray-300">
-        <div class="container mx-auto grid gap-10 px-6 py-12 md:grid-cols-4">
-            <div>
-                <p class="text-lg font-semibold text-white">Visionary Eyewear</p>
-                <p class="mt-3 text-sm text-gray-400">Forged for light hunters. Crafted for bold hearts.</p>
-            </div>
-            <div>
-                <p class="text-sm font-semibold uppercase tracking-[0.3em] text-amber-400">Shop</p>
-                <ul class="mt-4 space-y-2 text-sm">
-                    <li><a href="#collections" class="hover:text-white">Collections</a></li>
-                    <li><a href="#bestsellers" class="hover:text-white">Bestsellers</a></li>
-                    <li><a href="#" class="hover:text-white">Limited Editions</a></li>
-                    <li><a href="#" class="hover:text-white">Gift Cards</a></li>
-                </ul>
-            </div>
-            <div>
-                <p class="text-sm font-semibold uppercase tracking-[0.3em] text-amber-400">Support</p>
-                <ul class="mt-4 space-y-2 text-sm">
-                    <li><a href="#" class="hover:text-white">FAQ</a></li>
-                    <li><a href="#" class="hover:text-white">Shipping</a></li>
-                    <li><a href="#" class="hover:text-white">Returns</a></li>
-                    <li><a href="#" class="hover:text-white">Care Guide</a></li>
-                </ul>
-            </div>
-            <div>
-                <p class="text-sm font-semibold uppercase tracking-[0.3em] text-amber-400">Stay in the Glow</p>
-                <form class="mt-4 flex gap-3">
-                    <input type="email" placeholder="Email address"
-                           class="flex-1 rounded-full border border-white/20 bg-transparent px-4 py-2 text-sm placeholder:text-gray-500 focus:border-amber-400 focus:outline-none">
-                    <button class="rounded-full bg-white px-4 py-2 text-sm font-semibold text-black hover:bg-amber-50 transition">
-                        Join
-                    </button>
-                </form>
-            </div>
-        </div>
-        <div class="border-t border-white/5 py-4 text-center text-xs text-gray-500">
-            © {{ now|date:"Y" }} Visionary Eyewear. Crafted with light in mind.
-        </div>
-    </footer>
+    
 
     {% if messages %}
         <div class="fixed bottom-6 right-6 space-y-3 z-50">
@@ -335,28 +225,5 @@
         </div>
     {% endif %}
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const trigger = document.getElementById('mobile-menu-button');
-            const menu = document.getElementById('mobile-menu');
-            const toasts = document.querySelectorAll('.toast-message');
-
-            if (trigger && menu) {
-                trigger.addEventListener('click', function () {
-                    menu.classList.toggle('hidden');
-                });
-            }
-
-            if (toasts.length) {
-                toasts.forEach((toast, index) => {
-                    const hideDelay = 4000 + (index * 300);
-                    setTimeout(() => {
-                        toast.classList.add('opacity-0', 'translate-y-2');
-                        setTimeout(() => toast.remove(), 350);
-                    }, hideDelay);
-                });
-            }
-        });
-    </script>
-</body>
-</html>
+    
+{% endblock %}

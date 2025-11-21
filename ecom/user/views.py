@@ -197,3 +197,5 @@ def new_password(request):
     else:
         messages.warning(request, "unable to access this page now")
         return redirect("/")
+
+
