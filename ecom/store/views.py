@@ -1,7 +1,7 @@
-from itertools import product
+from pyexpat.errors import messages
 import re
-from django.shortcuts import render, get_object_or_404
-from .models import Product
+from django.shortcuts import redirect, render, get_object_or_404
+from .models import Product,Category
 
 
 def home(request):
@@ -36,6 +36,27 @@ def collection(request):
     products = Product.objects.all()
     return render(request, 'collection.html', {'products':products})
 
+def item(request,pk):
+    item = Product.objects.get(id=pk)
+    return render(request, 'item.html', {'item':item})
+
+# def category(request,foo):
+#     foo = foo.replace('-',' ')
+#     try:
+#         category = Category.objects.get(name=foo)
+#         items = Product.objects.filter(category=category)
+#         return render(request, 'category.html', {'items':items})
+#     except:
+#         messages.success(request, ("That Category doesn't Exist"))
+#         return redirect('home')
+
+def category(request, name):
+    category = Category.objects.get(name=name)
+    products = Product.objects.filter(category=category)
+    return render(request, "category.html", {
+        "category": category,
+        "products": products
+    })
 
 
 
