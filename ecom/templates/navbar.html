@@ -42,12 +42,26 @@
                         </div>
                     </div>
                     <a href="#testimonials" class="hover:text-blue-500 font-semibold">Reviews</a>
-                    <a href="{% url 'cart_sum' %}" class="inline-flex items-center gap-2 rounded-full border border-blue-500 px-4 py-2 hover:bg-blue-500 hover:text-white transition">
+                    <!-- <a href="{% url 'cart_sum' %}" id="cart_quantity" class="inline-flex items-center gap-2 rounded-full border border-blue-500 px-4 py-2 hover:bg-blue-500 hover:text-white transition">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                         </svg>
                         Cart
+                    </a> -->
+                    <a href="{% url 'cart_sum' %}" id="cart_quantity" class="inline-flex items-center gap-2 rounded-full border border-blue-500 px-4 py-2 hover:bg-blue-500 hover:text-white transition">
+                    {% if cart|length > 0 %}
+                        <span class="inline-flex items-center justify-center h-6 w-6 rounded-full bg-blue-500 text-white text-sm font-semibold">
+                            {{ cart|length }}
+                        </span> 
+                        <span class="font-medium">Cart</span>
+                    {% else %}
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        <span class="ml-1">Cart</span>
+                    {% endif %}
                     </a>
+
                 </div>
 
                 <div class="hidden lg:flex items-center gap-4 text-sm">

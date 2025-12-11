@@ -41,6 +41,7 @@
                     </span>
                 {% else %}
                     <p class="text-blue-600 font-semibold text-3xl">${{ item.price }}</p>
+                    <br> ID : {{ item.id }}
                 {% endif %}
             </div>
 
@@ -58,7 +59,7 @@
 
             <!-- Action Buttons -->
             <div class="space-y-4 pt-4">
-                <button class="w-full rounded-full bg-black px-8 py-4 text-white font-semibold text-lg shadow-lg shadow-black/20 hover:-translate-y-0.5 hover:shadow-xl transition-all duration-300">
+                <button value="{{ item.id }}" id="add-cart" class="w-full rounded-full bg-black px-8 py-4 text-white font-semibold text-lg shadow-lg shadow-black/20 hover:-translate-y-0.5 hover:shadow-xl transition-all duration-300">
                     Add to Cart
                 </button>
                 <button class="w-full rounded-full border-2 border-black px-8 py-4 text-black font-semibold text-lg hover:bg-black hover:text-white transition-all duration-300">
@@ -126,5 +127,31 @@
         </div>
     </div>
 </section>
+
+
+<script>
+    $(document).ready(function() {
+        $('#add-cart').click(function() {
+            const productId = $(this).val();
+            $.ajax({
+                url: '{% url "cart_add" %}',
+                method: 'POST',
+                data: {
+                    'product_id': productId,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    alert('Item added to cart!');
+                    console.log(response);
+                    document.getElementById('cart_quantity').innerHTML = response.cart_quantity;
+                },
+                error: function(xhr, status, error) {
+                    alert('Error adding item to cart.');
+                }
+            });
+        });
+    }); 
+</script>
+
 
 {% endblock %}
