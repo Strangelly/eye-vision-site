@@ -59,10 +59,20 @@
 
             <!-- Action Buttons -->
             <div class="space-y-4 pt-4">
+                <div class="flex items-center gap-4">
+                    <p class="font-semibold text-black">Quantity:</p>  
+                    <input  id="qty-input" 
+                            type="number" 
+                            min="1" 
+                            value="1"
+                            class="w-20 text-center border-2 border-gray-300 rounded-lg py-2 text-lg font-semibold">
+
+                <!-- Add to Cart Button -->
                 <button value="{{ item.id }}" id="add-cart" class="w-full rounded-full bg-black px-8 py-4 text-white font-semibold text-lg shadow-lg shadow-black/20 hover:-translate-y-0.5 hover:shadow-xl transition-all duration-300">
                     Add to Cart
                 </button>
-                <button class="w-full rounded-full border-2 border-black px-8 py-4 text-black font-semibold text-lg hover:bg-black hover:text-white transition-all duration-300">
+                </div>
+                <button value="{{ item.id }}" id="add-cart" class="w-full rounded-full border-2 border-black px-8 py-4 text-black font-semibold text-lg hover:bg-black hover:text-white transition-all duration-300">
                     Buy Now
                 </button>
             </div>
@@ -128,20 +138,35 @@
     </div>
 </section>
 
+{% if messages %}
+    <div class="fixed bottom-6 right-6 space-y-3 z-50">
+        {% for message in messages %}
+            <div class="toast-message rounded-2xl bg-white px-5 py-3 shadow-lg border-l-4 border-blue-500 text-sm text-gray-700 transition-all duration-300">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
 
 <script>
     $(document).ready(function() {
+
+        // Add to Cart AJAX
         $('#add-cart').click(function() {
             const productId = $(this).val();
+            const quantity = $('#qty-input').val();
+
             $.ajax({
                 url: '{% url "cart_add" %}',
                 method: 'POST',
                 data: {
                     'product_id': productId,
+                    'quantity': quantity,
                     'csrfmiddlewaretoken': '{{ csrf_token }}'
                 },
                 success: function(response) {
-                    alert('Item added to cart!');
+                    location.reload();
                     console.log(response);
                     document.getElementById('cart_quantity').innerHTML = response.cart_quantity;
                 },

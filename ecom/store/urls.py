@@ -10,4 +10,5 @@ urlpatterns = [
     path('collection/', views.collection, name='collection'),
     path('collection/<int:pk>', views.item, name='item'),
     path('category/<str:name>/', views.category, name="category"),
+    path('search/', views.search , name="search"),
 ]

@@ -2,6 +2,7 @@ from pyexpat.errors import messages
 import re
 from django.shortcuts import redirect, render, get_object_or_404
 from .models import Product,Category
+from django.db.models import Q
 
 
 def home(request):
@@ -55,6 +56,24 @@ def category(request, name):
     products = Product.objects.filter(category=category)
     return render(request, "category.html", {
         "category": category,
+        "products": products
+    })
+    
+
+def search(request):
+    query = request.GET.get("q")
+
+    products = Product.objects.none()
+
+    if query:
+        products = Product.objects.filter(
+            Q(name__icontains=query) |
+            Q(description__icontains=query) |
+            Q(category__name__icontains=query)
+        ).distinct()
+
+    return render(request, "search.html", {
+        "query": query,
         "products": products
     })
 
