@@ -5,9 +5,14 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.cache import cache
+
+from payment.models import ShippingAddress
+from payment.forms import ShippingForm
+
 import random
 from .models import CustomUser, Profile
 import re
+
 
 # Create your views here.
 def login_required_message(view_func):
@@ -55,7 +60,12 @@ def user(request):
     if "mobile" in request.session:
         del request.session["mobile"]
     user = request.user
-    return render(request, "user/user.html", {"user": user})
+    shipping_info = ShippingAddress.objects.filter(user=user).first()
+    return render(request, "user/user.html",{
+            "user": user,
+            "shipping_info": shipping_info
+        })
+
 
 
 
@@ -146,19 +156,19 @@ def otp_varification(request):
 @login_required_message
 def update_profile(request):
     if not request.user.is_varified:
-        messages.warning(request, "you need to verify your number to edit your profile")
+        messages.warning(request, "You need to verify your number to edit your profile")
         return redirect("user")
-    profile = get_object_or_404(Profile, user__mobile =request.user.mobile)
-    if request.method == "POST":
-        form = User_form(request.POST, instance=profile)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "update succesfull")
-            next_url = request.GET.get('next') or 'user'
-            return redirect(next_url)
-    form = User_form(instance=profile)
-    return render(request, "user/update_profile.html", {"form":form})
-
+    current_user = Profile.objects.get(user__id=request.user.id)
+    shipping_user = ShippingAddress.objects.get(id=request.user.id)
+        
+    form = User_form(request.POST or None, instance=current_user)
+    shipping_form = ShippingForm(request.POST or None, instance=shipping_user)  
+    if shipping_form.is_valid():
+        shipping_form.save()
+        messages.success(request, "Profile updated successfully")
+        return redirect("user")
+    return render(request, "user/update_profile.html", {"form": form, "shipping_form": shipping_form})
+    
 
 
 def forgot_password_mobile(request):

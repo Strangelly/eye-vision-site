@@ -1,6 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from .models import CustomUser, Profile
 from django.forms import ModelForm
+from payment.models import ShippingAddress
 
 
 class CustomUserCreationForm(UserCreationForm):

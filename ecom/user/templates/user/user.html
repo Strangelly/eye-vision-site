@@ -6,10 +6,24 @@
     <div class="max-w-2xl mx-auto">
         <div class="bg-white rounded-3xl shadow-lg border border-gray-100 p-8 space-y-6">
             <div class="text-center space-y-2">
-                <h1 class="text-3xl md:text-4xl font-semibold text-gray-900">User Profile</h1>
-                <p class="text-gray-600">Hello, <span class="font-semibold text-blue-500">{{ user }}</span></p>
+                <h1 class="text-3xl md:text-4xl font-semibold text-gray-900">{{ user }}</h1>
             </div>
+            {% if shipping_info %}
+            <div class="border p-4 rounded-lg mt-3">
+                <p><strong>Full Name:</strong> {{ shipping_info.shipping_full_name }}</p>
+                <p><strong>Email:</strong> {{ shipping_info.shipping_email }}</p>
+                <p><strong>Address 1:</strong> {{ shipping_info.shipping_address1 }}</p>
+                {% if shipping_info.shipping_address2 %}
+                <p><strong>Address 2:</strong> {{ shipping_info.shipping_address2 }}</p>
+                {% endif %}
+                <p><strong>City:</strong> {{ shipping_info.shipping_city }}</p>
+                <p><strong>Country:</strong> {{ shipping_info.shipping_country }}</p>
+            </div>
+            {% else %}
+                <p class="text-gray-500 mt-3">No shipping address saved yet.</p>
+            {% endif %}
 
+            
             {% if not user.is_varified %}
                 <div class="rounded-2xl bg-amber-50 border border-amber-200 p-6 space-y-4">
                     <div class="flex items-center gap-3">
