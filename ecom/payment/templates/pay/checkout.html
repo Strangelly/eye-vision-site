@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<section class="container mx-auto px-6 py-16">
+    <h2 class="text-3xl font-semibold text-black mb-8">Checkout</h2>
+    <div class="">
+        {% for item in items %}
+            {{ item.product.name }}:
+                {% if item.product.is_sale %}
+                    ${{ item.product.sale_price }}
+                {% else %}
+                    ${{ item.product.price }}
+                {% endif %}
+                x {{ item.quantity }} = ${{ item.total }}
+                <br>
+        {% endfor %}
+        <br>
+        total: ${{ total }}
+    </div>
+    <br>
+    <div>
+        {% if user.is_authenticated %}
+            <h3 class="text-2xl font-semibold text-black mb-4">Shipping Address</h3>
+            <form method="post">
+                {% csrf_token %}
+                {{ shipping_form.as_p }}
+            </form>
+        {% else %}
+            <p>Please log in to enter your shipping address.</p>
+        {% endif %}
+    </div>
+    <form method="POST" action="{% url 'process_order' %}">
+        {% csrf_token %}
+        {{ shipping_form.as_p }}
+        
+    <button type="submit" class="mt-6 bg-red-500 px-8 py-2 items-center text-white font-semibold text-lg shadow-lg shadow-black/20 hover:-translate-y-0.5 hover:shadow-xl transition-all duration-300">
+        Order
+    </button>
+    </form>
+</section>
+
+
+{% endblock %}

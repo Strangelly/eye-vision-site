@@ -71,3 +71,7 @@ class Cart():
             for item in self.cart.values()
         )
 
+    def clear(self):
+        self.cart.clear()
+        self.session.modified = True
+

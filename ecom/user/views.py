@@ -159,7 +159,7 @@ def update_profile(request):
         messages.warning(request, "You need to verify your number to edit your profile")
         return redirect("user")
     current_user = Profile.objects.get(user__id=request.user.id)
-    shipping_user = ShippingAddress.objects.get(id=request.user.id)
+    shipping_user = ShippingAddress.objects.get(user=request.user)
         
     form = User_form(request.POST or None, instance=current_user)
     shipping_form = ShippingForm(request.POST or None, instance=shipping_user)  
