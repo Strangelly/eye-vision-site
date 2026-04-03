@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from cart.cart import Cart
 from payment.models import ShippingAddress, Order, OrderItem
 from payment.forms import ShippingForm
@@ -77,10 +77,31 @@ def shipment_dash(request):
     if request.user.is_authenticated and request.user.is_superuser:
         shipped_orders = Order.objects.filter(shipped=True).order_by('-date_shipped')
         unshipped_orders = Order.objects.filter(shipped=False).order_by('-created_at')
+
+        if request.method == "POST":
+            item_id = request.POST.get("num")
+            status = request.POST.get("shipping_status")
+
+            order = get_object_or_404(Order, id=item_id)
+
+            if status == "true":
+                order.shipped = True
+
+            else:
+                order.shipped = False
+
+            order.save()            
+            messages.success(request, "Shipping status updated successfully")
+        
+            return redirect('home')
         return render(request, 'pay/shipment_dash.html', {'shipped_orders': shipped_orders, 'unshipped_orders': unshipped_orders})
 
 def orders(request, pk):
     if request.user.is_authenticated and request.user.is_superuser:
-        order = Order.objects.get(id=pk)
+        orders = Order.objects.get(id=pk)
         order_items = OrderItem.objects.filter(order=pk)
-        return render(request, 'pay/orders.html', {'order': order, 'order_items': order_items})
+    
+    return render(request, 'pay/orders.html', {'orders': orders, 'order_items': order_items})
+
+    
+    

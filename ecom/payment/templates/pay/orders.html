@@ -4,18 +4,18 @@
 <section class="container mx-auto px-6 py-16">
     <h2 class="text-3xl font-semibold text-black mb-8">Order Details</h2>
     <div class="bg-white rounded-lg shadow-md border border-gray-200 p-6">
-        <p><strong>Order ID:</strong> {{ order.id }}</p>
-        <p><strong>Customer:</strong> {{ order.user }}</p>
-        <p><strong>Shipping Address:</strong> {{ order.shipping_address }}</p>
+        <p><strong>Order ID:</strong> {{ orders.id }}</p>
+        <p><strong>Customer:</strong> {{ orders.user }}</p>
+        <p><strong>Shipping Address:</strong> {{ orders.shipping_address }}</p>
         <p><strong>Items:</strong></p>
         <ul>
             {% for item in order_items %}
             <li>{{ item.product }} - Quantity: {{ item.quantity }} - Price: ${{ item.price }}</li>
             {% endfor %}
         </ul>
-        <p><strong>Total Amount:</strong> ${{ order.total_price }}</p>
-        <p><strong>Date Ordered:</strong> {{ order.created_at|date:"M d, Y H:i" }}</p>
-        <p><strong>Status:</strong> {% if order.shipped %}Shipped{% else %}Unshipped{% endif %}</p>
+        <p><strong>Total Amount:</strong> ${{ orders.total_price }}</p>
+        <p><strong>Date Ordered:</strong> {{ orders.created_at|date:"M d, Y H:i" }}</p>
+        <p><strong>Status:</strong> {% if orders.shipped %}Shipped{% else %}Unshipped{% endif %}</p>
     </div>
 
 </section>
