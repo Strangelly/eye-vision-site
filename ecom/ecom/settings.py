@@ -19,7 +19,7 @@ SECRET_KEY = 'django-insecure-2fmp@^ke)mmqs%36trbi_)7s&247#475z1r)3j96&+$gm0967&
 DEBUG = True
 
 ALLOWED_HOSTS = ['eye-vision-site-production.up.railway.app', 'https://eye-vision-site-production.up.railway.app']
-CSRF_TRUSTED_ORIGINS = ['eye-vision-site-production.up.railway.app', 'https://eye-vision-site-production.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://eye-vision-site-production.up.railway.app']
 
 # Application definition
 
