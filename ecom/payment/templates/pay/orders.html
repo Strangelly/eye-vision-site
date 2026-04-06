@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<section class="container mx-auto px-6 py-16">
+    <h2 class="text-3xl font-semibold text-black mb-8">Order Details</h2>
+    <div class="bg-white rounded-lg shadow-md border border-gray-200 p-6">
+        <p><strong>Order ID:</strong> {{ orders.id }}</p>
+        <p><strong>Customer:</strong> {{ orders.user }}</p>
+        <p><strong>Shipping Address:</strong> {{ orders.shipping_address }}</p>
+        <p><strong>Items:</strong></p>
+        <ul>
+            {% for item in order_items %}
+            <li>{{ item.product }} - Quantity: {{ item.quantity }} - Price: ${{ item.price }}</li>
+            {% endfor %}
+        </ul>
+        <p><strong>Total Amount:</strong> ${{ orders.total_price }}</p>
+        <p><strong>Date Ordered:</strong> {{ orders.created_at|date:"M d, Y H:i" }}</p>
+        <p><strong>Status:</strong> {% if orders.shipped %}Shipped{% else %}Unshipped{% endif %}</p>
+    </div>
+
+</section>
+{% endblock %}

@@ -1,0 +1,165 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision Eye Wear</title>
+    <style>
+        body {
+          font-family: "Space Grotesk", ui-sans-serif, system-ui, -apple-system;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+      </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+</head>
+<body id="page-top" class="bg-gradient-to-b from-gray-50 to-white text-gray-900"></body>
+
+
+
+{% include 'navbar.html' %}
+
+{% block content %}
+
+{% endblock %}
+
+
+
+
+
+
+<footer class="bg-gray-950 text-gray-300">
+    <div class="container mx-auto grid gap-10 px-6 py-12 md:grid-cols-4">
+        <div>
+            <p class="text-lg font-semibold text-white">Visionary Eyewear</p>
+            <p class="mt-3 text-sm text-gray-400">Forged for light hunters. Crafted for bold hearts.</p>
+        </div>
+        <div>
+            <p class="text-sm font-semibold uppercase tracking-[0.3em] text-amber-400">Shop</p>
+            <ul class="mt-4 space-y-2 text-sm">
+                <li><a href="#collections" class="hover:text-white">Collections</a></li>
+                <li><a href="#bestsellers" class="hover:text-white">Bestsellers</a></li>
+                <li><a href="#" class="hover:text-white">Limited Editions</a></li>
+                <li><a href="#" class="hover:text-white">Gift Cards</a></li>
+            </ul>
+        </div>
+        <div>
+            <p class="text-sm font-semibold uppercase tracking-[0.3em] text-amber-400">Support</p>
+            <ul class="mt-4 space-y-2 text-sm">
+                <li><a href="#" class="hover:text-white">FAQ</a></li>
+                <li><a href="#" class="hover:text-white">Shipping</a></li>
+                <li><a href="#" class="hover:text-white">Returns</a></li>
+                <li><a href="#" class="hover:text-white">Care Guide</a></li>
+            </ul>
+        </div>
+        <div>
+            <p class="text-sm font-semibold uppercase tracking-[0.3em] text-amber-400">Stay in the Glow</p>
+            <form class="mt-4 flex gap-3">
+                <input type="email" placeholder="Email address"
+                       class="flex-1 rounded-full border border-white/20 bg-transparent px-4 py-2 text-sm placeholder:text-gray-500 focus:border-amber-400 focus:outline-none">
+                <button class="rounded-full bg-white px-4 py-2 text-sm font-semibold text-black hover:bg-amber-50 transition">
+                    Join
+                </button>
+            </form>
+        </div>
+    </div>
+    <div class="border-t border-white/5 py-4 text-center text-xs text-gray-500">
+        © {{ now|date:"Y" }} Visionary Eyewear. Crafted with light in mind.
+    </div>
+</footer>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const trigger = document.getElementById('mobile-menu-button');
+        const menu = document.getElementById('mobile-menu');
+        const toasts = document.querySelectorAll('.toast-message');
+
+        if (trigger && menu) {
+            trigger.addEventListener('click', function () {
+                menu.classList.toggle('hidden');
+            });
+        }
+
+        if (toasts.length) {
+            toasts.forEach((toast, index) => {
+                const hideDelay = 4000 + (index * 300);
+                setTimeout(() => {
+                    toast.classList.add('opacity-0', 'translate-y-2');
+                    setTimeout(() => toast.remove(), 350);
+                }, hideDelay);
+            });
+        }
+
+        // Bestsellers carousel functionality
+        const bestsellersContainer = document.getElementById('bestsellers-container');
+        const prevButton = document.getElementById('bestsellers-prev');
+        const nextButton = document.getElementById('bestsellers-next');
+        
+        if (bestsellersContainer && prevButton && nextButton) {
+            const products = bestsellersContainer.querySelectorAll('article');
+            
+            // Calculate items per view based on screen size
+            function getItemsPerView() {
+                if (window.innerWidth >= 1024) return 4; // lg: 4 items
+                if (window.innerWidth >= 768) return 3;  // md: 3 items
+                return 1; // mobile: 1 item
+            }
+            
+            function updateButtonStates() {
+                const itemsPerView = getItemsPerView();
+                const scrollLeft = bestsellersContainer.scrollLeft;
+                const scrollWidth = bestsellersContainer.scrollWidth;
+                const clientWidth = bestsellersContainer.clientWidth;
+                const maxScroll = scrollWidth - clientWidth;
+                
+                prevButton.disabled = scrollLeft <= 5; // -5 for floating point precision
+                nextButton.disabled = scrollLeft >= maxScroll - 5 || products.length <= itemsPerView;
+            }
+            
+            function scrollToNext() {
+                // Scroll by one viewport width
+                const scrollAmount = bestsellersContainer.clientWidth;
+                bestsellersContainer.scrollBy({
+                    left: scrollAmount,
+                    behavior: 'smooth'
+                });
+            }
+            
+            function scrollToPrev() {
+                // Scroll back by one viewport width
+                const scrollAmount = bestsellersContainer.clientWidth;
+                bestsellersContainer.scrollBy({
+                    left: -scrollAmount,
+                    behavior: 'smooth'
+                });
+            }
+            
+            prevButton.addEventListener('click', scrollToPrev);
+            nextButton.addEventListener('click', scrollToNext);
+            
+            // Update button states on scroll
+            bestsellersContainer.addEventListener('scroll', updateButtonStates);
+            
+            // Update on window resize
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    updateButtonStates();
+                }, 250);
+            });
+            
+            // Initialize button states
+            updateButtonStates();
+        }
+    });
+</script>
+</body>
+</html>

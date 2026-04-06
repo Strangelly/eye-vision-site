@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<section class="container mx-auto px-6 py-16">
+    <h2 class="text-3xl font-semibold text-black mb-8">Shopping Cart Summary</h2>
+    <div class="overflow-x-auto">
+        <table class="w-full table-auto border-collapse border border-gray-200">
+            <thead>
+                <tr class="bg-gray-100">
+                    <th class="border border-gray-200 px-4 py-2 text-left">Product</th>
+                    <th class="border border-gray-200 px-4 py-2 text-left">Quantity</th>
+                    <th class="border border-gray-200 px-4 py-2 text-left">Price</th>
+                    <th class="border border-gray-200 px-4 py-2 text-left">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in items %}
+            <tr class="border-b">
+                <td class="flex items-center gap-4 px-4 py-3">
+                    <img src="{{ item.product.image.url }}" 
+                    alt="{{ item.product.name }}"
+                    class="h-20 w-20 object-cover rounded-lg shadow-md">
+                <a href="{% url 'item' item.product.id %}">
+                    <span class="font-semibold text-gray-700">
+                    {{ item.product.name }}
+                </span>
+                </a>
+                <button data-product="{{ item.product.id }}" class="w-20 rounded-full bg-red-500 px-2 py-2 items-center text-white font-semibold text-sm shadow-lg shadow-black/20 hover:-translate-y-0.5 hover:shadow-xl transition-all duration-300 delete-btn">
+                    Remove
+                </button>
+                </td>
+
+                <td class="border px-4 py-2"> 
+                <input  type="number" 
+                        min="1" 
+                        class="qty-input w-16 border rounded px-2 py-1"
+                        data-product="{{ item.product.id }}"
+                        value="{{ item.quantity }}">
+                </td>
+
+                {% if item.product.is_sale %}
+                <td class="border px-4 py-2">
+                    <span class="text-red-600 font-semibold">${{ item.product.sale_price }}</span>
+                    <span class="line-through text-gray-500 ml-2">${{ item.product.price }}</span>
+                </td>
+                {% else %}
+                <td class="border px-4 py-2">${{ item.product.price }}</td>
+                {% endif %}
+                <td class="border px-4 py-2">${{ item.total }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="border px-4 py-2 text-center">
+                    Your cart is empty.
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr class="bg-gray-100">
+                    <td colspan="3" class="border px-4 py-2 text-right font-semibold">Grand Total</td>
+                    <td class="border px-4 py-2 font-semibold">${{ total }}</td>
+                </tr>
+        </table>
+        <div class="mt-6 flex justify-end">
+            <a href="{% url 'checkout' %}" class="rounded-full bg-blue-600 px-6 py-3 text-white font-semibold shadow-lg shadow-blue-500/20 hover:-translate-y-0.5 hover:shadow-xl transition-all duration-300">
+                Proceed to Checkout
+            </a>
+    </div>
+</section>
+
+{% if messages %}
+    <div class="fixed bottom-6 right-6 space-y-3 z-50">
+        {% for message in messages %}
+            <div class="toast-message rounded-2xl bg-white px-5 py-3 shadow-lg border-l-4 border-blue-500 text-sm text-gray-700 transition-all duration-300">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+
+<script>
+$(document).ready(function() {
+
+    // Update Quantity AJAX
+    $('.qty-input').on('change', function() {
+        const productId = $(this).data('product');
+        const quantity = $(this).val();
+
+        $.ajax({
+            url: '{% url "cart_update" %}',
+            method: 'POST',
+            data: {
+                'product_id': productId,
+                'quantity': quantity,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                // Reload page or adjust values dynamically
+                location.reload();
+            },
+            error: function() {
+                alert("Error updating quantity.");
+            }
+        });
+    });
+
+});
+
+
+// Delete Item AJAX
+$(document).ready(function() {
+    $('.delete-btn').click(function() {
+        const productId = $(this).data('product');
+
+        $.ajax({
+            url: '{% url "cart_delete" %}',
+            method: 'POST',
+            data: {
+                'product_id': productId,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                location.reload(); // simple & clean
+            },
+            error: function() {
+                alert("Error removing item.");
+            }
+        });
+    });
+});
+
+</script>
+
+
+
+{% endblock %}

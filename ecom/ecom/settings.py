@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,6 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'store',
     'user',
+    'cart',
+    'payment',
 ]
 
 MIDDLEWARE = [
@@ -57,13 +63,16 @@ ROOT_URLCONF = 'ecom.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.media',
                 'django.contrib.messages.context_processors.messages',
+                'store.context_processors.categories',
+                'cart.context_processors.cart',
             ],
         },
     },
@@ -77,8 +86,12 @@ WSGI_APPLICATION = 'ecom.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'railway',
+        'USER': 'postgres',
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': 'roundhouse.proxy.rlwy.net',
+        'PORT': '34749',
     }
 }
 
@@ -129,4 +142,3 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'user.CustomUser'
 
-LOGIN_URL = '/user/login/'

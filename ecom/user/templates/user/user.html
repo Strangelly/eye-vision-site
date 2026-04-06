@@ -1,23 +1,90 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User</title>
-</head>
-<body>
-    {% if messages %}
-        {% for massage in messages %}
-            {{ massage }}
+{% extends 'base.html' %}
+
+{% block content %}
+
+<section class="container mx-auto px-6 py-16">
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-3xl shadow-lg border border-gray-100 p-8 space-y-6">
+            <div class="text-center space-y-2">
+                <h1 class="text-3xl md:text-4xl font-semibold text-gray-900">{{ user }}</h1>
+            </div>
+            {% if shipping_info %}
+            <div class="border p-4 rounded-lg mt-3">
+                <p><strong>Full Name:</strong> {{ shipping_info.shipping_full_name }}</p>
+                <p><strong>Email:</strong> {{ shipping_info.shipping_email }}</p>
+                <p><strong>Address 1:</strong> {{ shipping_info.shipping_address1 }}</p>
+                {% if shipping_info.shipping_address2 %}
+                <p><strong>Address 2:</strong> {{ shipping_info.shipping_address2 }}</p>
+                {% endif %}
+                <p><strong>City:</strong> {{ shipping_info.shipping_city }}</p>
+                <p><strong>Country:</strong> {{ shipping_info.shipping_country }}</p>
+            </div>
+            {% else %}
+                <p class="text-gray-500 mt-3">No shipping address saved yet.</p>
+            {% endif %}
+
+            {% if user.is_superuser %}
+            <div>
+                <a href="{% url 'shipment_dash' %}" class="inline-flex items-center gap-2 rounded-full bg-blue-500 px-6 py-3 text-white font-medium hover:bg-blue-600 transition shadow-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    Dashboard
+                </a>
+            </div>
+            {% endif %}
+
+            {% if not user.is_varified %}
+                <div class="rounded-2xl bg-amber-50 border border-amber-200 p-6 space-y-4">
+                    <div class="flex items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <p class="text-amber-800 font-semibold">Verification Required</p>
+                    </div>
+                    <p class="text-amber-700">Your mobile number isn't verified. Please verify your number to access all features.</p>
+                    <a href="{% url 'otp' %}" class="inline-flex items-center gap-2 rounded-full bg-amber-500 px-6 py-3 text-white font-medium hover:bg-amber-600 transition shadow-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Verify Here
+                    </a>
+                    <a href="{% url 'update_profile' %}" class="inline-flex items-center gap-2 rounded-full bg-blue-500 px-6 py-3 text-white font-medium hover:bg-blue-600 transition shadow-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Update Profile
+                    </a>
+                </div>
+            {% else %}
+                <div class="rounded-2xl bg-blue-50 border border-blue-200 p-6 space-y-4">
+                    <div class="flex items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                        <p class="text-blue-800 font-semibold">Account Verified</p>
+                    </div>
+                    <p class="text-blue-700">Your account is verified and ready to use. You can now update your profile information.</p>
+                    <a href="{% url 'update_profile' %}" class="inline-flex items-center gap-2 rounded-full bg-blue-500 px-6 py-3 text-white font-medium hover:bg-blue-600 transition shadow-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Update Profile
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+{% if messages %}
+    <div class="fixed bottom-6 right-6 space-y-3 z-50">
+        {% for message in messages %}
+            <div class="toast-message rounded-2xl bg-white px-5 py-3 shadow-lg border-l-4 border-blue-500 text-sm text-gray-700 transition-all duration-300">
+                {{ message }}
+            </div>
         {% endfor %}
-    {% endif %}
-    <p>Hello: {{ user }}</p>
-    {% if not user.is_varified %}
-        <p>your number isn't varified</p>
-        <a href="{% url "otp" %}"><button>verify here</button></a>
-    {% else %}
-        <p>update your profile</p>
-        <a href="{% url "update_profile" %}"><button>update profile</button></a>
-    {% endif %}
-</body>
-</html>
+    </div>
+{% endif %}
+
+{% endblock %}
