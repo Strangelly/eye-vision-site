@@ -1,11 +1,24 @@
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
+import requests
+import uuid
 from cart.cart import Cart
 from payment.models import ShippingAddress, Order, OrderItem
 from payment.forms import ShippingForm
 from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
 
+@csrf_exempt
 def success(request):
     return render(request, 'pay/success.html', {})
+
+@csrf_exempt
+def payment_fail(request):
+    return render(request, 'pay/payment_fail.html', {})
+
+@csrf_exempt
+def payment_cancel(request):
+    return render(request, 'pay/payment_cancel.html', {})
 
 def checkout(request):
     cart = Cart(request)
@@ -104,4 +117,33 @@ def orders(request, pk):
     return render(request, 'pay/orders.html', {'orders': orders, 'order_items': order_items})
 
     
-    
+def initiate_payment(request):
+    url = "https://sandbox.sslcommerz.com/gwprocess/v4/api.php"
+
+    data = {
+        "store_id": "grief69a004a1555f5",
+        "store_passwd": "grief69a004a1555f5@ssl",
+        "total_amount": 100,
+        "currency": "BDT",
+        "tran_id": str(uuid.uuid4()),  # must be unique
+        "success_url": "http://127.0.0.1:8000/payment/success/",
+        "fail_url": "http://127.0.0.1:8000/payment/fail/",
+        "cancel_url": "http://127.0.0.1:8000/payment/cancel/",
+        "emi_option": 0,
+        "cus_name": "Test User",
+        "cus_email": "test@email.com",
+        "cus_phone": "01700000000",
+        "shipping_method": "NO",
+        "product_name": "Test Product",
+        "product_category": "Ecommerce",
+        "product_profile": "general",
+    }
+
+    response = requests.post(url, data=data)
+    res_data = response.json()
+
+    # redirect user to payment page
+    if res_data.get("status") == "SUCCESS":
+        return redirect(res_data["GatewayPageURL"])
+    else:
+        return redirect("payment_failed")
